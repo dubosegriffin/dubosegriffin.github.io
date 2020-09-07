@@ -1,2 +1,2 @@
 # dubosegriffin.github.io
-Professional web site
+Code for my site
