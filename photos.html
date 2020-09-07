@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap-theme.min.css">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/justifiedgallery.min.css" />
+    <link rel="stylesheet" href="css/swipebox.min.css">
+    <link href="css/style.css" rel="stylesheet">
+    <title>Photos | DuBose Griffin</title>
+
+  </head>
+
+  <body>
+
+    <!-- Content -->
+    <div class="container">
+
+      <div class="text-center">
+        <h1>DuBose Griffin</h1>
+        <p class="lead">photographer, aficionado</p>
+        <p><a href="index.html">Home</a> | <strong>Photos</strong> | <a href="about.html">About</a>
+
+        <hr>
+
+        <div id="photos">
+        </div>
+      </div>
+
+    </div>
+
+    <hr>
+
+    <!-- Footer -->
+    <div class="text-center sb-footer">
+      <p><a href="http://www.linkedin.com/in/dubosegriffin">LinkedIn</a> | <a href="http://instagram.com/dubosegriffin">Instagram</a> | <a href="https://www.flickr.com/photos/duboseg/">Flickr</a></p>
+    </div>
+
+  <!-- JavaScript -->
+  <script src="js/jquery-2.1.0.min.js"></script>
+  <script src="js/jquery.justifiedgallery.min.js"></script>
+  <script src="js/jquery.swipebox.min.js"></script>
+  <script>
+
+  $(document).ready(function() {
+    var params = {
+        'api_key': '6a987db435b2848b6afd3e53b757b9ac',
+        'format': 'json',
+        'method': 'flickr.photos.search',
+        'user_id': '135237452@N03',
+        'tags': 'dg-favorites'
+    };
+
+    $.ajax({
+        type: 'GET',
+        url: 'https://api.flickr.com/services/rest/?jsoncallback=?',
+        data: params,
+        dataType: 'jsonp',
+        timeout: 10000
+      }).done(function( data ) {
+          var photos = data.photos;
+          var imagesHTML = '';
+          var link, title, thumbnail, src;
+          var column = 0;
+          var id;
+          var limit = 52;
+
+          for ( var i = 0; i < photos.photo.length && i < limit; i++ ) {
+              link = 'https://farm' + photos.photo[ i ].farm + 
+                      '.static.flickr.com/' + photos.photo[ i ].server + '/' + photos.photo[ i ].id + '_' + 
+                      photos.photo[i].secret + '_';
+              thumbnail = link + 'n.jpg';
+              src = link + 'b.jpg';
+              title = photos.photo[ i ].title;
+              id = 'thumbnail-' + i;
+
+              imagesHTML = '<a href="' + src + '" class="swipebox-image">';
+              imagesHTML += '<img alt="' + title + '" src="' + thumbnail + '"/>';
+              imagesHTML += '</a>';
+
+              $('#photos').append(imagesHTML);
+          }
+          $("#photos").justifiedGallery({
+            rowHeight : 160
+          }).on('jg.complete', function () {
+            $('.swipebox-image').swipebox();
+          });
+    });
+
+  });
+
+  </script>
+
+  </body>
+</html>
+
+
